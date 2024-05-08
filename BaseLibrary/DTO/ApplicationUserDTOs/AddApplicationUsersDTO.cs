@@ -1,8 +1,6 @@
-﻿using BaseLibrary.Entities;
-
-namespace BaseLibrary.DTO
+﻿namespace BaseLibrary.DTO.ApplicationUserDTOs
 {
-    public class ApplicationUserDTO
+    public class AddApplicationUsersDTO
     {
         public string Name { get; set; }
         public string Email { get; set; }

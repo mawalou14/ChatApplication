@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BaseLibrary.DTO;
+using BaseLibrary.DTO.messageDTOs;
 using BaseLibrary.Entities;
 using ChatApplicationAPI.DataAccessLayer;
 using ChatApplicationAPI.Repositories.Message;
@@ -32,7 +32,7 @@ namespace ChatApplicationAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] MessageDTO message)
+        public async Task<IActionResult> CreateAsync([FromBody] GetMessageDTO message)
         {
             var messageEntity = mapper.Map<MessageEntity>(message);
             await messageRepository.AddMessage(messageEntity);

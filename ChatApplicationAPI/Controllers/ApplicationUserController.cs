@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BaseLibrary.DTO;
+using BaseLibrary.DTO.ApplicationUserDTOs;
 using BaseLibrary.Entities;
 using ChatApplicationAPI.DataAccessLayer;
 using ChatApplicationAPI.Repositories.ApplicationUser;
@@ -27,11 +27,12 @@ namespace ChatApplicationAPI.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var usersModel = await userRepository.GetAllAsync();
-            var UserDTO = mapper.Map<ApplicationUserDTO>(usersModel);
+            var UserDTO = mapper.Map<List<GetApplicationUsersDTO>>(usersModel);
             return Ok(UserDTO);
         }
 
         [HttpGet("{id:guid}")]
+        [ActionName("GetByIdAsync")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
         {
             var foundUser = await userRepository.GetByIdAync(id);
@@ -43,11 +44,11 @@ namespace ChatApplicationAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] ApplicationUserDTO newUser)
+        public async Task<IActionResult> CreateAsync([FromBody] GetApplicationUsersDTO newUser)
         {
             var applicationUserModel = mapper.Map<ApplicationUserEntity>(newUser);
             var createdUser = await userRepository.AddAsync(applicationUserModel);
-            var applicationUserDto = mapper.Map<ApplicationUserDTO>(createdUser);
+            var applicationUserDto = mapper.Map<GetApplicationUsersDTO>(createdUser);
             return CreatedAtAction(nameof(GetByIdAsync), new {id = applicationUserModel.Id}, applicationUserDto);
         }
     }

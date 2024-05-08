@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BaseLibrary.DTO;
+using BaseLibrary.DTO.messageDTOs;
 using BaseLibrary.Entities;
 
 namespace ChatApplicationAPI.Mappings
@@ -8,7 +8,8 @@ namespace ChatApplicationAPI.Mappings
     {
         public MessageMappingProfiles()
         {
-            CreateMap<MessageEntity, MessageDTO>().ReverseMap();
+            CreateMap<MessageEntity, GetMessageDTO>().ReverseMap();
+            CreateMap<AddMessageDTO, MessageEntity>().ReverseMap();
         }
     }
 }

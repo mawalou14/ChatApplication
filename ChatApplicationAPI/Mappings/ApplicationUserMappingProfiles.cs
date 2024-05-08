@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BaseLibrary.DTO;
+using BaseLibrary.DTO.ApplicationUserDTOs;
 using BaseLibrary.Entities;
 
 namespace ChatApplicationAPI.Mappings
@@ -8,7 +8,8 @@ namespace ChatApplicationAPI.Mappings
     {
         public ApplicationUserMappingProfiles()
         {
-            CreateMap<ApplicationUserEntity, ApplicationUserDTO>().ReverseMap();
+            CreateMap<ApplicationUserEntity, GetApplicationUsersDTO>().ReverseMap();
+            CreateMap<AddApplicationUsersDTO, ApplicationUserEntity>().ReverseMap();
         }
     }
 }

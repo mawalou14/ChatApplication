@@ -1,12 +1,11 @@
 ﻿using BaseLibrary.Entities;
 
-namespace BaseLibrary.DTO
+namespace BaseLibrary.DTO.messageDTOs
 {
-    public class MessageDTO
+    public class AddMessageDTO
     {
         public string Message { get; set; }
         public DateTime Date { get; set; }
-        public ApplicationUserEntity ApplicationUser { get; set; }
         public Guid ApplicationUserId { get; set; }
     }
 }
