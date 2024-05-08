@@ -10,13 +10,13 @@ namespace ChatApplicationAPI.Controllers
 {
     [Route("api/message")]
     [ApiController]
-    public class Message : ControllerBase
+    public class MessageController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
         private readonly IMessageRepository messageRepository;
 
-        public Message(ApplicationDbContext dbContext, IMapper mapper, IMessageRepository messageRepository )
+        public MessageController(ApplicationDbContext dbContext, IMapper mapper, IMessageRepository messageRepository )
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
@@ -38,5 +38,7 @@ namespace ChatApplicationAPI.Controllers
             await messageRepository.AddMessage(messageEntity);
             return Ok();
         }
+
+
     }
 }
