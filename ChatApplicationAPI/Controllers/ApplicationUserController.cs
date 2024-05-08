@@ -40,11 +40,12 @@ namespace ChatApplicationAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(foundUser);
+            var user = mapper.Map<GetApplicationUsersDTO>(foundUser);
+            return Ok(user);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] GetApplicationUsersDTO newUser)
+        public async Task<IActionResult> CreateAsync([FromBody] AddApplicationUsersDTO newUser)
         {
             var applicationUserModel = mapper.Map<ApplicationUserEntity>(newUser);
             var createdUser = await userRepository.AddAsync(applicationUserModel);
