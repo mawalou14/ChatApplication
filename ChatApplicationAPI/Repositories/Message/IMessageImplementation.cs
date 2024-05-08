@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChatApplicationAPI.Repositories.Message
 {
-    public class IMessageImplementation : IMessage
+    public class IMessageImplementation : IMessageRepository
     {
         private readonly ApplicationDbContext dbContext;
 

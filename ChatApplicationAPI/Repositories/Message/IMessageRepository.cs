@@ -2,7 +2,7 @@
 
 namespace ChatApplicationAPI.Repositories.Message
 {
-    public interface IMessage
+    public interface IMessageRepository
     {
         Task<List<MessageEntity>> GetAllAsync();
         Task<MessageEntity> AddMessage(MessageEntity message);

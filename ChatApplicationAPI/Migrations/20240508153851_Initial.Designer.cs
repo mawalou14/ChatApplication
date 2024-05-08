@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ChatApplicationAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240508145619_Initial")]
+    [Migration("20240508153851_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace ChatApplicationAPI.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BaseLibrary.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("BaseLibrary.Entities.ApplicationUserEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -69,7 +69,7 @@ namespace ChatApplicationAPI.Migrations
 
             modelBuilder.Entity("BaseLibrary.Entities.MessageEntity", b =>
                 {
-                    b.HasOne("BaseLibrary.Entities.ApplicationUser", "ApplicationUser")
+                    b.HasOne("BaseLibrary.Entities.ApplicationUserEntity", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)

@@ -1,4 +1,7 @@
 using ChatApplicationAPI.DataAccessLayer;
+using ChatApplicationAPI.Mappings;
+using ChatApplicationAPI.Repositories.ApplicationUser;
+using ChatApplicationAPI.Repositories.Message;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +18,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("ChatAppConnectionString"));
 });
+
+builder.Services.AddScoped<IMessageRepository, IMessageImplementation>();
+builder.Services.AddScoped<IApplicationUserRepository, IApplicationUserImplementation>();
+
+builder.Services.AddAutoMapper(typeof(ApplicationUserMappingProfiles));
+builder.Services.AddAutoMapper(typeof(MessageMappingProfiles));
 
 var app = builder.Build();
 
