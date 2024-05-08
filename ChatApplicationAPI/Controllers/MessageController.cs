@@ -27,12 +27,12 @@ namespace ChatApplicationAPI.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var messages = await messageRepository.GetAllAsync();
-            var getMessageDto = mapper.Map<List<MessageEntity>>(messages);
+            var getMessageDto = mapper.Map<List<GetMessageDTO>>(messages);
             return Ok(getMessageDto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] GetMessageDTO message)
+        public async Task<IActionResult> CreateAsync([FromBody] AddMessageDTO message)
         {
             var messageEntity = mapper.Map<MessageEntity>(message);
             await messageRepository.AddMessage(messageEntity);
