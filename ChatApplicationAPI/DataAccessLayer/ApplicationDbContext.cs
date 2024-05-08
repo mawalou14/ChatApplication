@@ -8,6 +8,6 @@ namespace ChatApplicationAPI.DataAccessLayer
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<MessageEntity> Messages { get; set; }
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<ApplicationUserEntity> ApplicationUsers { get; set; }
     }
 }
