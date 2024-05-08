@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BaseLibrary.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatApplicationAPI.DataAccessLayer
 {
@@ -6,6 +7,7 @@ namespace ChatApplicationAPI.DataAccessLayer
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        //public DbSet<MessageEntity>
+        public DbSet<MessageEntity> Messages { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     }
 }

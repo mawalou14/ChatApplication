@@ -1,3 +1,6 @@
+using ChatApplicationAPI.DataAccessLayer;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,7 +11,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Add the Connection to the database
-//builder.Services.AddDbContext<>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("ChatAppConnectionString"));
+});
 
 var app = builder.Build();
 
