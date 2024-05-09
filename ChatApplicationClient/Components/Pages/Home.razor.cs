@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Net.Http;
+using ChatApplicationClient.Extension;
+using MudBlazor;
+
+
 
 namespace ChatApplicationClient.Components.Pages
 {
@@ -12,20 +16,103 @@ namespace ChatApplicationClient.Components.Pages
         [CascadingParameter]
         public HubConnection ApplicationHub { get; set; }
 
+        [Inject]
+        private HttpClient httpClient { get; set; }
+        [Inject] private IConfiguration Configuration { get; set; }
+
+        private List<GetMessageDTO> messages;
+        private List<GetApplicationUsersDTO> users;
+        private Guid selectedUserId;
+        private string messageText;
+        private DateTime Date = DateTime.Now;
+
         protected override async Task OnInitializedAsync()
         {
-            if (ApplicationHub != null && ApplicationHub.State == HubConnectionState.Disconnected)
-            {
-                try
-                {
-                    await ApplicationHub.StartAsync();
-                }
-                catch
-                {
+            await GetMessageFromApi();
+            await GetMessagesFromApi();
+            await ApplicationHub.KeppAlive();
 
+            ApplicationHub.On<DateTime>("RecieveMessage", async Date =>
+            {
+                await GetMessageFromApi();
+                InvokeAsync(() => StateHasChanged());
+            });
+        }
+
+        private async Task<List<GetMessageDTO>> GetMessageFromApi()
+        {
+            try
+            {
+                var response = await httpClient.GetAsync("api/message");
+                if (response.IsSuccessStatusCode)
+                {
+                    return messages = await response.Content.ReadFromJsonAsync<List<GetMessageDTO>>();
+                }
+                else
+                {
+                    return new List<GetMessageDTO>();
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during the API call: {ex.Message}");
+                return new List<GetMessageDTO>();
+            }
         }
+
+        private async Task<List<GetApplicationUsersDTO>> GetMessagesFromApi()
+        {
+            try
+            {
+                var response = await httpClient.GetAsync("api/user");
+                if (response.IsSuccessStatusCode)
+                {
+                    return users = await response.Content.ReadFromJsonAsync<List<GetApplicationUsersDTO>>();
+                }
+                else
+                {
+                    return new List<GetApplicationUsersDTO>();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error during the API call: {ex.Message}");
+                return new List<GetApplicationUsersDTO>();
+            }
+        }
+
+        private async Task SendMessage()
+        {
+            try
+            {
+                var messageDTO = new AddMessageDTO
+                {
+                    Message = messageText,
+                    ApplicationUserId = selectedUserId
+                };
+
+                var response = await httpClient.PostAsJsonAsync("api/message", messageDTO);
+                if (response.IsSuccessStatusCode)
+                {
+                    //await ApplicationHub.SendAsync("RecieveMessage", Date);
+                    ApplicationHub!.SendAsync("SendMessage", Date);
+                    messageText = "";
+                    await GetMessageFromApi();
+                }
+                else
+                {
+                    Console.WriteLine("Failed to send message.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending message: {ex.Message}");
+            }
+        }
+
+        // To verify if the hub is connected
+        private bool IsConnected =>
+        ApplicationHub!.State == HubConnectionState.Connected;
     }
 
 }
