@@ -1,3 +1,4 @@
+using ChatApplicationAPI.ChatHubs;
 using ChatApplicationAPI.DataAccessLayer;
 using ChatApplicationAPI.Mappings;
 using ChatApplicationAPI.Repositories.ApplicationUser;
@@ -39,5 +40,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ChatHub>("/chathub");
 
 app.Run();

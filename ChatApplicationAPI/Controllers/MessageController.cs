@@ -61,7 +61,7 @@ namespace ChatApplicationAPI.Controllers
             {
                 Message = message.Message,
                 Date = DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Utc),
-                ApplicationUser = user, // Set the user object directly
+                ApplicationUser = user,
                 ApplicationUserId = message.ApplicationUserId
             };
 
