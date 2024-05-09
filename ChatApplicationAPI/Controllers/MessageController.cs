@@ -2,6 +2,7 @@
 using BaseLibrary.DTO.messageDTOs;
 using BaseLibrary.Entities;
 using ChatApplicationAPI.DataAccessLayer;
+using ChatApplicationAPI.Repositories.ApplicationUser;
 using ChatApplicationAPI.Repositories.Message;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +16,14 @@ namespace ChatApplicationAPI.Controllers
         private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
         private readonly IMessageRepository messageRepository;
+        private readonly IApplicationUserRepository userRepository;
 
-        public MessageController(ApplicationDbContext dbContext, IMapper mapper, IMessageRepository messageRepository )
+        public MessageController(ApplicationDbContext dbContext, IMapper mapper, IMessageRepository messageRepository, IApplicationUserRepository userRepository )
         {
             this.dbContext = dbContext;
             this.mapper = mapper;
             this.messageRepository = messageRepository;
+            this.userRepository = userRepository;
         }
 
         [HttpGet]
@@ -34,9 +37,24 @@ namespace ChatApplicationAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] AddMessageDTO message)
         {
-            var messageEntity = mapper.Map<MessageEntity>(message);
+            var userId = message.ApplicationUserId;
+            var user = await userRepository.GetByIdAync(userId);
+            if (user == null)
+            {
+                return NotFound($"User with ID {userId} not found.");
+            }
+
+            // Map the DTO to the entity
+            var messageEntity = new MessageEntity
+            {
+                Message = message.Message,
+                Date = DateTime.SpecifyKind(DateTime.Today, DateTimeKind.Utc),
+                ApplicationUser = user, // Set the user object directly
+                ApplicationUserId = message.ApplicationUserId
+            };
+
             await messageRepository.AddMessage(messageEntity);
-            return Ok();
+            return CreatedAtAction(nameof(Get));
         }
 
 

@@ -21,7 +21,7 @@ namespace ChatApplicationAPI.Repositories.Message
 
         public async Task<List<MessageEntity>> GetAllAsync()
         {
-            return await dbContext.Messages.ToListAsync();
+            return await dbContext.Messages.Include(x => x.ApplicationUser).ToListAsync();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BaseLibrary.DTO.ApplicationUserDTOs;
+using BaseLibrary.DTO.messageDTOs;
 using BaseLibrary.Entities;
 
 namespace ChatApplicationAPI.Mappings

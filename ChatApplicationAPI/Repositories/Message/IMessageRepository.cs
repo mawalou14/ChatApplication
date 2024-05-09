@@ -6,5 +6,6 @@ namespace ChatApplicationAPI.Repositories.Message
     {
         Task<List<MessageEntity>> GetAllAsync();
         Task<MessageEntity> AddMessage(MessageEntity message);
+
     }
 }
