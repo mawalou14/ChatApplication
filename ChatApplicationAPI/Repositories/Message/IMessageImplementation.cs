@@ -26,7 +26,7 @@ namespace ChatApplicationAPI.Repositories.Message
 
         public async Task<MessageEntity> GetByIdAsync(Guid id)
         {
-            var foundMessage = await dbContext.Messages.FirstOrDefaultAsync(x => x.Id == id);
+            var foundMessage = await dbContext.Messages.Include( x => x.ApplicationUser).FirstOrDefaultAsync(x => x.Id == id);
             if (foundMessage == null)
             {
                 return null;
