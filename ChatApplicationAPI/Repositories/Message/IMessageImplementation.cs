@@ -23,5 +23,15 @@ namespace ChatApplicationAPI.Repositories.Message
         {
             return await dbContext.Messages.Include(x => x.ApplicationUser).ToListAsync();
         }
+
+        public async Task<MessageEntity> GetByIdAsync(Guid id)
+        {
+            var foundMessage = await dbContext.Messages.FirstOrDefaultAsync(x => x.Id == id);
+            if (foundMessage == null)
+            {
+                return null;
+            } 
+            return foundMessage;
+        }
     }
 }

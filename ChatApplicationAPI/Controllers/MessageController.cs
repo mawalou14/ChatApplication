@@ -34,6 +34,18 @@ namespace ChatApplicationAPI.Controllers
             return Ok(getMessageDto);
         }
 
+        [HttpGet("{id:guid}")]
+        [ActionName("GetByIdAsync")]
+        public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
+        {
+            var foundMessage = await messageRepository.GetByIdAsync(id);
+            if (foundMessage == null)
+            {
+                return NotFound();
+            }
+            return Ok(foundMessage);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] AddMessageDTO message)
         {
@@ -54,7 +66,7 @@ namespace ChatApplicationAPI.Controllers
             };
 
             await messageRepository.AddMessage(messageEntity);
-            return CreatedAtAction(nameof(Get));
+            return CreatedAtAction(nameof(GetByIdAsync), new {id = messageEntity.Id}, messageEntity);
         }
 
 
