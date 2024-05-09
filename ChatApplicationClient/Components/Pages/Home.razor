@@ -64,37 +64,35 @@
     [Inject]
     private HttpClient httpClient { get; set; }
 
-    private HubConnection hubConnection;
-    private List<string> Messages = [];
+    // private HubConnection hubConnection;
 
     private List<GetMessageDTO> messages;
     private List<GetApplicationUsersDTO> users;
-    private Guid selectedUserr;
-    private GetApplicationUsersDTO selectedUser;
+    private Guid selectedUserId;
     private string messageText;
     private DateTime Date = DateTime.Now;
 
     protected override async Task OnInitializedAsync()
     {
         // Load messages and users from the API
-        users = await GetUsersFromAPI(); // Fixed typo here
-        messages = await GetMessagesFromAPI(); // Fixed typo here
+        await GetUsersFromAPI(); // Fixed typo here
+        await GetMessagesFromAPI(); // Fixed typo here
 
         // Initialize SignalR connection
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavManager.ToAbsoluteUri("/chatHub")) // Fixed typo here
-            .Build();
+        // hubConnection = new HubConnectionBuilder()
+        //     .WithUrl(NavManager.ToAbsoluteUri("/chatHub")) Fixed typo here
+        //     .Build();
 
         // Configure the "RecieveMessage" event handler
-        hubConnection.On<string, string, DateTime>("RecieveMessage", (UserName, Message, Date) =>
-        {
-            var concatMessage = $"From: <b>{UserName}</b>{Environment.NewLine} Date: <b>{Date}</b>, Message: <b>{Message}</b>{Environment.NewLine}";
-            Messages.Add(concatMessage);
-            InvokeAsync(() => StateHasChanged());
-        });
+        // hubConnection.On<string, string, DateTime>("RecieveMessage", (UserName, Message, Date) =>
+        // {
+        //     var concatMessage = {};
+        //     messages.Add(concatMessage);
+        //     InvokeAsync(() => StateHasChanged());
+        // });
 
         // Start the SignalR connection
-        hubConnection.StartAsync();
+        // await hubConnection.StartAsync();
     }
 
     private async Task<List<GetMessageDTO>?> GetMessagesFromAPI()
@@ -105,7 +103,7 @@
             var response = await httpClient.GetAsync("api/message");
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<List<GetMessageDTO>>();
+                return messages = await response.Content.ReadFromJsonAsync<List<GetMessageDTO>>();
             }
             else
             {
@@ -129,7 +127,7 @@
             var response = await httpClient.GetAsync("api/user");
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<List<GetApplicationUsersDTO>>();
+                return users = await response.Content.ReadFromJsonAsync<List<GetApplicationUsersDTO>>();
             }
             else
             {
@@ -152,20 +150,17 @@
             var messageDTO = new AddMessageDTO
                 {
                     Message = messageText,
-                    ApplicationUserId = selectedUser.Id
+                    ApplicationUserId = selectedUserId
                 };
 
             var response = await httpClient.PostAsJsonAsync("api/message", messageDTO);
             if (response.IsSuccessStatusCode)
             {
-                // Message sent successfully, reload messages
-                // await GetMessagesFromAPI(); // No need to reload messages, handled by SignalR
-                await hubConnection!.SendAsync("SendMessage", selectedUser.Name, messageText, Date);
-                messageText = ""; // Clear the message box
+                await GetMessagesFromAPI();
+                messageText = "";
             }
             else
             {
-                // Handle error
                 Console.WriteLine("Failed to send message.");
             }
         }
