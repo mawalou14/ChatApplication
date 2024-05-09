@@ -26,6 +26,19 @@ builder.Services.AddScoped<IApplicationUserRepository, IApplicationUserImplement
 builder.Services.AddAutoMapper(typeof(ApplicationUserMappingProfiles));
 builder.Services.AddAutoMapper(typeof(MessageMappingProfiles));
 
+//Add the signalR
+builder.Services.AddSignalR();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowChatApp",
+        builder => builder
+        .WithOrigins("https://localhost:7035", "http://localhost:5246")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,6 +53,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors("AllowChatApp");
 
 app.MapHub<ChatHub>("/chathub");
 
